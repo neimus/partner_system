@@ -44,7 +44,7 @@
 REQUIREMENTS
 ------------
 
-The minimum requirement by this project template that your Web server supports PHP 7.1.
+PHP 7.1, Nginx
 
 
 INSTALLATION
