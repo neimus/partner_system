@@ -312,6 +312,17 @@ class User extends AbstractModel implements IdentityInterface
      */
     public function getReferrals(): array
     {
-        return self::find()->getReferralsByUserId($this->getId());
+        return self::find()->getReferrals($this->getId());
     }
+
+    public function getReferrer()
+    {
+        return self::find()->getReferrer($this->getId());
+    }
+
+    public function __toString()
+    {
+        return sprintf('%s (%s)', $this->username, $this->email);
+    }
+
 }

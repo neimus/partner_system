@@ -4,13 +4,15 @@
 /* @var $form yii\bootstrap\ActiveForm */
 
 /* @var $user app\models\User */
+/* @var $referrals app\models\User[] */
+
+/* @var $referrer app\models\User */
 
 use app\models\User;
 use yii\helpers\Html;
 
 $this->title = 'Профиль пользователя';
 $this->params['breadcrumbs'][] = $this->title;
-$referrals = $user->getReferrals();
 ?>
 <div class="site-login">
 	<h1><?= Html::encode($this->title) ?></h1>
@@ -40,14 +42,19 @@ $referrals = $user->getReferrals();
 	</div>
 
 	<div class="col-md-6">
-		<div class="col-md-12">
+        <?php if ($referrer !== null): ?>
+			<div class="col-md-12">
+				Вы пришли от: <span class="text-info"><?= $referrer ?></span>
+			</div>
+        <?php endif; ?>
+		<div class="col-md-12" style="padding-top: 10px">
             <?php if (!empty($referrals)): ?>
-				Вы уже пригласили:
-				<ul>
+				От вас пришли:
+				<ol>
                     <?php foreach ($referrals as $referral): ?>
-						<li><span class="text-primary"><?= $referral->username ?></span></li>
+						<li><span class="text-success"><?= $referral ?></span></li>
                     <?php endforeach; ?>
-				</ul>
+				</ol>
             <?php else: ?>
 				Вы еще никого не пригласили :-(
             <?php endif; ?>

@@ -127,9 +127,15 @@ class SiteController extends Controller
         if ($userForm->load(Yii::$app->request->post())) {
 
             $referrerId = ReferralHelper::getReferrerId();
-            $userForm->setReferrer($referrerId !== null ? $this->getUser((int)$referrerId) : null);
+            $referrer = $referrerId !== null ? $this->getUser((int)$referrerId) : null;
+            $userForm->setReferrer($referrer);
 
             if ($userForm->save() && $userForm->login()) {
+                $message = 'Спасибо за регистрацию.';
+                if ($referrer !== null) {
+                    $message .= ' Вас пригласил ' . $referrer;
+                }
+                Yii::$app->session->setFlash('success', $message);
                 ReferralHelper::removeReferrer();
 
                 return $this->goHome();
@@ -165,9 +171,16 @@ class SiteController extends Controller
     public function actionProfile()
     {
         try {
-            return $this->render('profile', [
-                'user' => Yii::$app->user->getIdentity(),
-            ]);
+            /** @var User $user */
+            $user = Yii::$app->user->getIdentity();
+            if ($user !== null) {
+                return $this->render('profile', [
+                    'user'      => $user,
+                    'referrals' => $user->getReferrals(),
+                    'referrer'  => $user->getReferrer(),
+                ]);
+            }
+
         } catch (\Exception $e) {
             Yii::error($e->getMessage(), 'profile');
         } catch (\Throwable $e) {
